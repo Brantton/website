@@ -1,0 +1,90 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Pomodoro - B. Montiel Corp</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="top-header">
+        <h1>B. Montiel Corp</h1>
+        <nav>
+            <ul class="horizontal-nav">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="gear.html">Gear</a></li>
+                <li><a href="pomodoro.html" class="active">Pomodoro</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="about-main">
+        <div class="timer-container">
+            <h2>Pomodoro Timer</h2>
+            <div class="mode-buttons">
+                <button onclick="setMode('pomodoro')">Pomodoro (25 min)</button>
+                <button onclick="setMode('short')">Short Break (5 min)</button>
+                <button onclick="setMode('long')">Long Break (15 min)</button>
+            </div>
+            <div class="timer" id="timer">25:00</div>
+            <div class="timer-buttons">
+                <button onclick="startTimer()">Start</button>
+                <button onclick="pauseTimer()">Pause</button>
+                <button onclick="resetTimer()">Reset</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let timerDisplay = document.getElementById('timer');
+        let totalSeconds = 60 * 60;
+        let interval;
+        let isRunning = false;
+        let currentMode = 'pomodoro';
+
+        const modeDurations = {
+            pomodoro: 60 * 60,
+            short: 5 * 60,
+            long: 15 * 60
+        };
+
+        function updateDisplay() {
+            let minutes = Math.floor(totalSeconds / 60);
+            let seconds = totalSeconds % 60;
+            timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (isRunning) return;
+            isRunning = true;
+            interval = setInterval(() => {
+                if (totalSeconds > 0) {
+                    totalSeconds--;
+                    updateDisplay();
+                } else {
+                    clearInterval(interval);
+                    isRunning = false;
+                    alert("Time's up!");
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            isRunning = false;
+            clearInterval(interval);
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            totalSeconds = modeDurations[currentMode];
+            updateDisplay();
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            resetTimer();
+        }
+
+        updateDisplay();
+    </script>
+</body>
+</html>
